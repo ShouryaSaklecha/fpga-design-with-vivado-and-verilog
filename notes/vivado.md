@@ -1,6 +1,5 @@
 # Vivado Gui Notes
 
-
 ## Schematic Tooling
 Clicking RTL Analysis > Open Elaborated Design > Schematic allows to use:
 1. See the gate level logic of verilog.
@@ -18,7 +17,45 @@ A net is the logical representation of a signal path that provides electrical co
 ## Synthesis Tooling
 Ensure TB code is under "simulation" and design under "Design Sources".
 
+Converts FPGA code to set of primitives. **Does not place it on the FPGA yet.**
+
 ### Clocks and XDC
 You should search for "master" xdc files by searching on google based on your board. The XDC files:
 1. Have default clocking information.
 2. Have some/or all, basic IO mapping.
+3. You can find XDC files in the "Constraints" section
+
+### I/O Planning
+1. Check available ports
+2. Add voltages etc to them etc.
+3. Use xdc to find pin numbers (eg G15), to add pin
+4. Use I/O standard to enter the IO Standard like LVCMOS32 etc.
+
+### Post Synthesis Functional Verification
+Done after TB, which is purely behavioural.
+This verifies the functional verification of the FPGA based conversion.
+
+## Implementation
+Make sure your package pins for IO is specified **before** implementation.
+
+You can see after implementation:
+-  Where logic is placed on the actual board.
+-  See nets/leaf cells etc.
+- You can implement simulation on post implementation design too
+
+## Bitsream
+Generate the file for the FPGA
+- Use hardware manager AFTER connecting the board to the PC.
+- Hardware Manager > Program Device to burn the code
+- Given you have switches etc I/O properlyh marked in the XDC, the code should now run on your board. 
+
+## Waveform Viewer
+- Using the <> arrows at a signal;, changes it to the next change of the signal
+- Up down changes signal
+- Ctrl allows use to move the marker and find thge time difference
+- **Scope**: Highlights the top and daughter modules
+- If a signal is not in the waveform, go to its module, right click > "Add to waveform"
+- Change datatype by clicking on signal > radiux > type
+- You can also change colours etc.
+- Select "Analog" to also see transition like an analog signal
+  
