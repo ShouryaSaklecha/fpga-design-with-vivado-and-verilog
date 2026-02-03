@@ -62,6 +62,11 @@ dout = var; // Automatically adjusts widths
 - **real:**: also floating point data type
 - **Cannot be used in synthesis**
 - We will need to add ip blocks to use floating point numbers in synthesis
+## Blocking:
+Blocking assignments are executed sequentially in the order they are written, meaning the variable on the left side is updated immediately before the simulator moves to the next statement. You should use blocking assignments exclusively when modeling combinational logic to ensure that intermediate signal changes propagate through the logic gates correctly within the same simulation time step.
+
+## Non Blocking
+Non-blocking assignments schedule their updates to occur at the end of the current time step, which allows the simulator to read the old values of all variables before any of them are updated. This behavior is essential for modeling sequential logic because it accurately mimics how hardware flip-flops capture data on a clock edge, preventing race conditions where the order of execution would otherwise change the outcome of your circuit.
 
 ## Reporting Mechanism
 ```
@@ -102,10 +107,45 @@ end
 
 initial begin
 #10
-a = 1
-$monitor(); // Here, it will NOT report 1. It will report 
-// value when a changes
+a <= 1
+$display(); 
 # 15;
-a = 0;
+a <= 0;// Here, it will NOT report 0. It will report 1
 end
 ```
+Print formats:
+```
+%0d // decimal
+%0b // binary
+%0o // octal
+%0t // time
+```
+Code:
+```
+module tb;
+ 
+// Declare a 4-bit register 'a' with an initial value of 0
+reg [3:0] a = 4'h0;
+ 
+ 
+initial begin
+  a = 4'b1001; // Set 'a' to binary 1001
+  #10; // Wait for 10 time units
+  a = 4'b0001; // Set 'a' to binary 0001
+  $display("Value of a_d : %0d @ %0t",a, $time); // Display the value of 'a' in decimal format, along with the current time
+  #10; // Wait for 10 time units
+  a = 4'b1010; // Set 'a' to binary 1010
+  $display("Value of a_d : %0d @ %0t",a, $time); // Display the value of 'a' in decimal format, along with the current time
+  #10; // Wait for 10 time units
+  a = 4'b1010; // Set 'a' to binary 1010
+  $display("Value of a_d : %0d @ %0t",a, $time); // Display the value of 'a' in decimal format, along with the current time
+end
+ 
+// Monitor the value of 'a' and display it along with the current time
+initial begin
+  $monitor("Value of a_m :%0d @ %0t", a, $time); // Display the value of 'a' in decimal format, along with the current time
+end
+ 
+endmodule
+```
+
