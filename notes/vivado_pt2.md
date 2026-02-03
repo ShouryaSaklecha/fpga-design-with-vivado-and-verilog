@@ -30,7 +30,6 @@ always @(posedge gated_clk) begin
 end
 ```
 - fsm_extraction: Enables you to use a specific type of FSM inference (eg, you can ask the tool to prefer one-hot encoding)
-- 
 
 These are based on Xilinx Designed optimisations.
 ## State Encoding Techniques
